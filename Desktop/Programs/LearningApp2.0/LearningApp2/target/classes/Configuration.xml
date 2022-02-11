@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:p="http://www.springframework.org/schema/p"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd ">
+
+<tx:annotation-driven />
+
+<bean class="Database.UserDataDao" name="db">
+<property name="hibernate" ref="hibernate" />
+</bean>
+
+<bean class="Database.UserData" name="userdata">
+</bean>
+
+<bean class="com.sachin.LearningApp2.Login" name="login">
+<property name="udd" ref="db"/>
+<property name="la" ref="welcome"/>
+<property name="su" ref="signup"/>
+</bean>
+
+<bean class="com.sachin.LearningApp2.Learning_app" name="welcome">
+</bean>
+
+<bean class="com.sachin.LearningApp2.SignUp" name="signup">
+<property name="udd" ref="db"/>
+<property name="ud" ref="userdata"/>
+<property name="f" ref="login"/>
+</bean>
+
+
+<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="ds">
+<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+<property name="url" value="jdbc:mysql://localhost:3306/springjdbc"/>
+<property name="username" value="Sachin"/>
+<property name="password" value="Bhaisachin12@"/>
+</bean>
+
+<bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" name="lsfb">
+<property name="dataSource" ref="ds"></property>
+<property name="hibernateProperties">
+<props>
+<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+<prop key="hibernate.show_sql">true</prop>
+<prop key="hibernate.hbm2ddl.auto">update</prop>
+</props>
+</property>
+<property name="annotatedClasses">
+<list>
+<value>Database.UserData</value>
+</list>
+</property>
+</bean>
+
+
+<bean class="org.springframework.orm.hibernate5.HibernateTemplate" name="hibernate">
+<property name="sessionFactory" ref="lsfb"></property>
+<property name="checkWriteOperations" value="false"></property>
+</bean>
+
+
+<bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" name="transactionManager">
+<property name="sessionFactory" ref="lsfb"></property>
+</bean>
+
+
+</beans>
